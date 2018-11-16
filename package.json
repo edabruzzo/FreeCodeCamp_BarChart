@@ -4,6 +4,8 @@
   "description": "Data Visualization Projects - Visualize Data with a Bar Chart",
   "main": "index.html",
   "scripts": {
+    "start": "npm run lite",
+    "lite": "lite-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,6 +19,12 @@
   },
   "homepage": "https://github.com/edabruzzo/FreeCodeCamp_BarChart#readme",
   "dependencies": {
-    "liteserver": "^0.3.0"
+    "bootstrap": "^4.1.2",
+    "jquery": "^3.3.1",
+
+    "popper.js": "^1.14.3"
+  },
+  "devDependencies": {
+    "lite-server": "^2.4.0"
   }
 }
