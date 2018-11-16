@@ -1,0 +1,22 @@
+{
+  "name": "free_code_camp_barcharts",
+  "version": "1.0.0",
+  "description": "Data Visualization Projects - Visualize Data with a Bar Chart",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edabruzzo/FreeCodeCamp_BarChart.git"
+  },
+  "author": "Emmanuel D'Abruzzo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/edabruzzo/FreeCodeCamp_BarChart/issues"
+  },
+  "homepage": "https://github.com/edabruzzo/FreeCodeCamp_BarChart#readme",
+  "dependencies": {
+    "liteserver": "^0.3.0"
+  }
+}
