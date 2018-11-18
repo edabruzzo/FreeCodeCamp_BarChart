@@ -29,19 +29,19 @@ req.onload = function () {
   document.getElementById("title").textContent = "Produto Interno Bruto dos EUA";
 
   margin = {
-          "top":50, 
-          "right":20,
-          "bottom":50,
-          "left":100
-          };
+    "top": 50,
+    "right": 20,
+    "bottom": 50,
+    "left": 100
+  };
 
   const svg = container
     .append("svg")
     .attr("width", w + margin.left + margin.right)
     .attr("height", h + margin.top + margin.bottom)
-    .attr("transform", "translate("+margin.left+","+margin.top+")");
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    
+
   var legenda = svg.append("text")
     .attr("transform", "rotate(-90)")
     .attr("x", -200)
@@ -52,14 +52,14 @@ req.onload = function () {
   document.getElementById("legendaY").textContent = "Gross Domestic Product";
 
 
-//  minimoAno = new Date(dataset[0][0].substring(0, 4));
+  //  minimoAno = new Date(dataset[0][0].substring(0, 4));
   //maximoAno = new Date(dataset[dataset.length - 1][0].substring(0, 4));
-  
+
   minimoAno = dataset[0][0].substring(0, 4);
   maximoAno = dataset[dataset.length - 1][0].substring(0, 4);
 
 
-  
+
   const xScale = d3.scaleLinear()
     .domain([minimoAno, maximoAno])
     .range([0, w]);
@@ -74,21 +74,21 @@ req.onload = function () {
 
 
   tooltip = d3.select('body')
-              .append('div')
-              .style({
-                      'position':'absolute',
-                      'padding':'4px' ,
-                      'background':'#fff',
-                      'border':'1px solid #000',
-                      'color':'#000'
-                    });
+    .append('div')
+    .style({
+      'position': 'absolute',
+      'padding': '4px',
+      'background': '#fff',
+      'border': '1px solid #000',
+      'color': '#000'
+    });
 
 
   svg.append("g")
     .attr("id", "x-axis")
     .attr("transform", "translate(0, " + (h) + ")")
-  //.attr("transform", "translate(60, 400)")
-  //  .attr("text-anchor", "middle")
+    //.attr("transform", "translate(60, 400)")
+    //  .attr("text-anchor", "middle")
     .attr("font-size", 10)
     .attr("font-family", "sans-serif")
     .call(xAxis)
@@ -118,7 +118,34 @@ req.onload = function () {
     .attr("y", 30)
     .text("Values(billions)");
 
-    svg.selectAll("rect")
+
+
+
+  //MouseHandlers
+
+  function mouseOverHandler(d){
+
+      tooltip.transition().style('opacity', .8)
+      tooltip.html('<p> Date: '+d[0]+"</p>"+
+                  "<p>Value(billions): "+d[1]+"</p>")
+      d3.select(this).style('opacity', .1);
+  };
+
+  function mouseOutHandler(d){
+
+    tooltip.transition().style('opacity', 0)
+    d3.select(this).style('opacity', 1);
+};
+
+
+function mouseMoveHandler(d){
+
+  tooltip.style("top",(d3.event.pageY -10)+'py')
+  tooltip.style("left",(d3.event.pageX +10)+'px')
+  d3.select(this).style('opacity', 0.8);
+};
+  
+  svg.selectAll("rect")
     .data(dataset)
     .enter()
     .append("rect")
@@ -127,39 +154,10 @@ req.onload = function () {
     .attr("data-gdp", (d) => d[1])
     .attr("data-date", (d) => d[0])
     .attr("width", w / dataset.length)
-    .attr("height", (d, i) => h - yScale(d[1]))
-    .style("fill", "rgb(51 173 255)")
-
-
-    
-    
-    /*MouseHandlers
-
-    function mouseOverHandler(d){
-
-        tooltip.transition().style('opacity', .8)
-        tooltip.html('<p> Date: '+d[0]+"</p>"+
-                    "<p>Value(billions): "+d[1]+"</p>")
-        d3.select(this).style('opacity', .1);
-    }
-
-    function mouseOutHandler(d){
-
-      tooltip.transition().style('opacity', 0)
-      d3.select(this).style('opacity', 1);
-  }
-
-
-  function mouseMoveHandler(d){
-
-    tooltip.style("top",(d3.event.pageY -10)+'py')
-    tooltip.style("left",(d3.event.pageX +10)+'px')
-    d3.select(this).style('opacity', 0.8);
-}
-*/
-
-    /*
+    .attr("height", (d, i) => h - yScale(d[1]))  
+    .style("fill", "rgb(51 173 255)")  
     .on("mouseover", mouseOverHandler)
     .on("mousemove", mouseMoveHandler)
-    .on("mouseout", mouseOutHandler)
-    */
+    .on("mouseout" , mouseOutHandler);
+    
+ };
