@@ -1,18 +1,17 @@
 
 var url = "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json";
 
+
 req = new XMLHttpRequest();
 req.open("GET", url, true);
 req.send();
 req.onload = function () {
+
   json = JSON.parse(req.responseText);
 
   console.log(JSON.stringify(json));
 
-  const dataset = json.data;
-
-  console.log(dataset);
-  //document.write(dataset);
+  var dataset = json.data;
 
   const w = 800;
   const h = 400;
@@ -73,17 +72,6 @@ req.onload = function () {
   const xAxis = d3.axisBottom(xScale);
 
 
-  tooltip = d3.select('body')
-    .append('div')
-    .style({
-      'position': 'absolute',
-      'padding': '4px',
-      'background': '#fff',
-      'border': '1px solid #000',
-      'color': '#000'
-    });
-
-
   svg.append("g")
     .attr("id", "x-axis")
     .attr("transform", "translate(0, " + (h) + ")")
@@ -118,46 +106,40 @@ req.onload = function () {
     .attr("y", 30)
     .text("Values(billions)");
 
+  tooltip = d3.select('body')
+    .append('div')
+    .attr("id", "tooltip")
+    .attr('class', 'invisible');
 
 
-
-  //MouseHandlers
-
-  function mouseOverHandler(d){
-
-      tooltip.transition().style('opacity', .8)
-      tooltip.html('<p> Date: '+d[0]+"</p>"+
-                  "<p>Value(billions): "+d[1]+"</p>")
-      d3.select(this).style('opacity', .1);
-  };
-
-  function mouseOutHandler(d){
-
-    tooltip.transition().style('opacity', 0)
-    d3.select(this).style('opacity', 1);
-};
-
-
-function mouseMoveHandler(d){
-
-  tooltip.style("top",(d3.event.pageY -10)+'py')
-  tooltip.style("left",(d3.event.pageX +10)+'px')
-  d3.select(this).style('opacity', 0.8);
-};
-  
   svg.selectAll("rect")
     .data(dataset)
     .enter()
     .append("rect")
+    .attr("class", 'bar')
     .attr("x", (d, i) => i * (w / dataset.length))
     .attr("y", (d) => yScale(d[1]))
     .attr("data-gdp", (d) => d[1])
     .attr("data-date", (d) => d[0])
     .attr("width", w / dataset.length)
-    .attr("height", (d, i) => h - yScale(d[1]))  
-    .style("fill", "rgb(51 173 255)")  
-    .on("mouseover", mouseOverHandler)
-    .on("mousemove", mouseMoveHandler)
-    .on("mouseout" , mouseOutHandler);
-    
- };
+    .attr("height", (d, i) => h - yScale(d[1]))
+    .style("fill", "rgb(51 173 255)")
+    .on("mouseout", function () {
+      tooltip.attr('class', 'invisible')
+        .attr('data-date', "");
+    })
+    .on("mouseover", function (d) {
+      d3.select("#tooltip")
+        .attr('class', 'visible')
+        .attr('data-date', d[0]);
+
+      d3.select("#tooltip")
+        .text(new Date(d[0])  + '$' + d[1] + ' Billion')
+        .style("left", (d3.event.clientX + 20) + "px")
+        .style("top", d3.event.clientY + "px");
+    });
+
+};
+
+
+
